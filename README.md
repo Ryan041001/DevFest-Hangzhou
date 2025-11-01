@@ -1,2 +1,2 @@
 # DevFest-Hangzhou
-DevFest Hangzhou 2025 - Chrome DevTools MCP Server Workshop 官方网站
+DevFest Hangzhou 2025 - Chrome DevTools MCP Server Workshop 个人作品
