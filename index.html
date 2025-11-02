@@ -19,138 +19,143 @@
             --google-green: #34a853;
             --text-primary: #202124;
             --text-secondary: #5f6368;
+            --bg-light: #ffffff;
             --bg-gray: #f8f9fa;
+            --border-light: #dadce0;
         }
         
         body {
             font-family: 'Roboto', sans-serif;
             color: var(--text-primary);
             line-height: 1.6;
-            overflow-x: hidden;
+            background: var(--bg-gray);
         }
         
         /* Navigation */
         nav {
-            position: fixed;
+            position: sticky;
             top: 0;
             width: 100%;
-            background: white;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            background: var(--bg-light);
+            border-bottom: 1px solid var(--border-light);
             z-index: 1000;
-            padding: 1rem 0;
+            padding: 0.75rem 0;
         }
         
         .nav-container {
-            max-width: 1200px;
+            max-width: 100%;
             margin: 0 auto;
-            padding: 0 2rem;
+            padding: 0 1.5rem;
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-start;
             align-items: center;
+            gap: 2.5rem;
         }
         
         .logo {
             font-family: 'Google Sans', sans-serif;
-            font-size: 1.5rem;
-            font-weight: 700;
+            font-size: 1.3rem;
+            font-weight: 500;
             color: var(--text-primary);
-        }
-        
-        .logo span {
-            color: var(--google-blue);
+            letter-spacing: 0.5px;
         }
         
         .nav-links {
             display: flex;
-            gap: 2rem;
+            gap: 1.5rem;
             list-style: none;
         }
         
         .nav-links a {
             color: var(--text-secondary);
             text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s;
+            font-weight: 400;
+            font-size: 0.95rem;
+            transition: color 0.2s;
             cursor: pointer;
+            padding: 0.5rem 0;
+            border-bottom: 2px solid transparent;
         }
         
-        .nav-links a:hover,
-        .nav-links a.active {
+        .nav-links a:hover {
             color: var(--google-blue);
         }
         
-        /* Hero Section */
+        .nav-links a.active {
+            color: var(--google-blue);
+            border-bottom-color: var(--google-blue);
+        }
+        
+        /* Hero Section - Minimal */
         .hero {
-            margin-top: 80px;
-            background: linear-gradient(135deg, var(--google-blue) 0%, #5e97f6 100%);
-            color: white;
-            padding: 6rem 2rem;
+            background: var(--bg-light);
+            padding: 4rem 1.5rem;
             text-align: center;
         }
         
         .hero h1 {
             font-family: 'Google Sans', sans-serif;
-            font-size: 3.5rem;
+            font-size: 2.8rem;
             font-weight: 700;
-            margin-bottom: 1rem;
-            animation: fadeInUp 0.8s ease-out;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
         }
         
         .hero .subtitle {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-            opacity: 0.95;
-            animation: fadeInUp 0.8s ease-out 0.2s both;
+            font-size: 1.1rem;
+            margin-bottom: 0.3rem;
+            color: var(--text-secondary);
+            font-weight: 400;
         }
         
         .hero .date-location {
-            font-size: 1.2rem;
+            font-size: 0.95rem;
             margin-bottom: 2rem;
-            opacity: 0.9;
-            animation: fadeInUp 0.8s ease-out 0.4s both;
+            color: var(--text-secondary);
         }
         
         .cta-buttons {
             display: flex;
             gap: 1rem;
             justify-content: center;
-            animation: fadeInUp 0.8s ease-out 0.6s both;
         }
         
         .btn {
-            padding: 1rem 2rem;
-            border-radius: 24px;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
             font-weight: 500;
             text-decoration: none;
-            transition: all 0.3s;
+            transition: all 0.2s;
             cursor: pointer;
             border: none;
-            font-size: 1rem;
+            font-size: 0.95rem;
+            letter-spacing: 0.3px;
         }
         
         .btn-primary {
-            background: white;
-            color: var(--google-blue);
+            background: var(--google-blue);
+            color: white;
         }
         
         .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            background: #1d66d6;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
         }
         
         .btn-secondary {
-            background: rgba(255,255,255,0.2);
-            color: white;
-            border: 2px solid white;
+            background: var(--bg-gray);
+            color: var(--google-blue);
+            border: 1px solid var(--border-light);
         }
         
         .btn-secondary:hover {
-            background: rgba(255,255,255,0.3);
+            background: #f1f3f4;
+            border-color: var(--border-light);
         }
         
         /* Sections */
         section {
-            padding: 4rem 2rem;
+            padding: 3rem 1.5rem;
             max-width: 1200px;
             margin: 0 auto;
         }
@@ -161,192 +166,187 @@
         
         .section-title {
             font-family: 'Google Sans', sans-serif;
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 3rem;
-            text-align: center;
-            position: relative;
+            font-size: 2rem;
+            font-weight: 500;
+            margin-bottom: 2rem;
+            color: var(--text-primary);
+            letter-spacing: 0.3px;
         }
         
-        .section-title::after {
-            content: '';
-            display: block;
-            width: 60px;
-            height: 4px;
-            background: linear-gradient(90deg, var(--google-blue), var(--google-red), var(--google-yellow), var(--google-green));
-            margin: 1rem auto 0;
-            border-radius: 2px;
-        }
-        
-        /* Cards */
+        /* Cards - Clean minimal */
         .cards {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
         }
         
         .card {
-            background: white;
-            border-radius: 16px;
-            padding: 2rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            transition: all 0.3s;
+            background: var(--bg-light);
+            border-radius: 8px;
+            padding: 1.5rem;
+            border: 1px solid var(--border-light);
+            transition: all 0.2s;
         }
         
         .card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+            border-color: var(--google-blue);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
         
         .card-icon {
-            font-size: 3rem;
+            font-size: 2.5rem;
             margin-bottom: 1rem;
         }
         
         .card h3 {
             font-family: 'Google Sans', sans-serif;
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            margin-bottom: 0.75rem;
             color: var(--text-primary);
+            font-weight: 500;
         }
         
         .card p {
             color: var(--text-secondary);
-            line-height: 1.8;
+            line-height: 1.7;
+            font-size: 0.95rem;
         }
         
         /* About Section */
         .about-content {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 3rem;
-            align-items: center;
-            margin-top: 2rem;
+            gap: 2.5rem;
+            align-items: start;
+            margin-top: 1.5rem;
+            background: var(--bg-light);
+            padding: 2rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-light);
         }
         
         .about-text h3 {
             font-family: 'Google Sans', sans-serif;
-            font-size: 1.8rem;
+            font-size: 1.4rem;
             margin-bottom: 1rem;
-            color: var(--google-blue);
+            color: var(--text-primary);
+            font-weight: 500;
         }
         
         .about-text p {
             color: var(--text-secondary);
             margin-bottom: 1rem;
             line-height: 1.8;
+            font-size: 0.95rem;
         }
         
         .about-image {
             background: linear-gradient(135deg, var(--google-blue), var(--google-green));
-            border-radius: 16px;
-            height: 300px;
+            border-radius: 8px;
+            height: 250px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 6rem;
+            font-size: 5rem;
         }
         
         /* Profile Section */
         .profile-card {
-            max-width: 800px;
-            margin: 2rem auto;
-            background: white;
-            border-radius: 16px;
-            padding: 3rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            max-width: 700px;
+            margin: 1.5rem auto;
+            background: var(--bg-light);
+            border-radius: 8px;
+            padding: 2.5rem;
+            border: 1px solid var(--border-light);
             text-align: center;
         }
         
         .profile-avatar {
-            width: 150px;
-            height: 150px;
+            width: 120px;
+            height: 120px;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--google-blue), var(--google-red));
             margin: 0 auto 1.5rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 4rem;
+            font-size: 3rem;
             color: white;
         }
         
         .profile-card h2 {
             font-family: 'Google Sans', sans-serif;
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
+            font-size: 1.8rem;
+            margin-bottom: 0.3rem;
+            font-weight: 500;
         }
         
         .profile-card .subtitle {
             color: var(--text-secondary);
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            font-weight: 400;
         }
         
         .profile-info {
             text-align: left;
-            margin-top: 2rem;
+            margin-top: 1.5rem;
         }
         
         .profile-info p {
             color: var(--text-secondary);
-            margin-bottom: 1rem;
+            margin-bottom: 0.8rem;
             line-height: 1.8;
+            font-size: 0.95rem;
         }
         
         .social-link {
             display: inline-block;
-            margin-top: 1rem;
+            margin-top: 1.5rem;
             padding: 0.75rem 1.5rem;
             background: var(--google-blue);
             color: white;
             text-decoration: none;
-            border-radius: 24px;
-            transition: all 0.3s;
+            border-radius: 4px;
+            transition: all 0.2s;
+            font-weight: 500;
+            font-size: 0.95rem;
         }
         
         .social-link:hover {
-            background: #5e97f6;
-            transform: translateY(-2px);
+            background: #1d66d6;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
         }
         
         /* Footer */
         footer {
-            background: var(--text-primary);
-            color: white;
-            padding: 2rem;
+            background: var(--bg-light);
+            color: var(--text-secondary);
+            padding: 2rem 1.5rem;
             text-align: center;
+            border-top: 1px solid var(--border-light);
+            font-size: 0.9rem;
         }
         
         footer p {
-            opacity: 0.8;
-        }
-        
-        /* Animations */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            margin: 0.5rem 0;
         }
         
         /* Responsive */
         @media (max-width: 768px) {
             .hero h1 {
-                font-size: 2.5rem;
+                font-size: 2rem;
             }
             
-            .hero .subtitle {
-                font-size: 1.2rem;
+            .nav-container {
+                flex-wrap: wrap;
+                gap: 1rem;
             }
             
             .nav-links {
                 gap: 1rem;
+                flex-wrap: wrap;
             }
             
             .cta-buttons {
@@ -355,10 +355,16 @@
             
             .about-content {
                 grid-template-columns: 1fr;
+                padding: 1.5rem;
             }
             
             .cards {
                 grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .section-title {
+                font-size: 1.5rem;
             }
         }
     </style>
@@ -367,7 +373,7 @@
     <!-- Navigation -->
     <nav>
         <div class="nav-container">
-            <div class="logo">DevFest <span>Hangzhou</span></div>
+            <div class="logo">DevFest Hangzhou</div>
             <ul class="nav-links">
                 <li><a href="#home" class="nav-link active" onclick="showSection('home')">首页</a></li>
                 <li><a href="#gdg" class="nav-link" onclick="showSection('gdg')">关于 GDG</a></li>
@@ -380,32 +386,32 @@
     <!-- Home Section -->
     <section id="home">
         <div class="hero">
-            <h1>🎉 DevFest Hangzhou 2025</h1>
+            <h1>DevFest Hangzhou 2025</h1>
             <div class="subtitle">Chrome DevTools MCP Server Workshop</div>
-            <div class="date-location">📅 2025年11月1日 | 📍 杭州</div>
+            <div class="date-location">2025年11月1日 · 杭州</div>
             <div class="cta-buttons">
-                <a href="#devtools" class="btn btn-primary" onclick="showSection('devtools')">探索 Workshop</a>
-                <a href="#about" class="btn btn-secondary" onclick="showSection('about')">了解更多</a>
+                <a href="#devtools" class="btn btn-primary" onclick="showSection('devtools')">了解 Workshop</a>
+                <a href="#about" class="btn btn-secondary" onclick="showSection('about')">关于我</a>
             </div>
         </div>
 
         <section>
-            <h2 class="section-title">Workshop 亮点</h2>
+            <h2 class="section-title">Workshop 核心内容</h2>
             <div class="cards">
                 <div class="card">
                     <div class="card-icon">🔧</div>
                     <h3>Chrome DevTools</h3>
-                    <p>深入探索 Chrome 开发者工具的强大功能，掌握现代 Web 开发的必备技能。</p>
+                    <p>掌握现代浏览器开发工具的强大功能，提升调试效率和开发能力。</p>
                 </div>
                 <div class="card">
                     <div class="card-icon">🤖</div>
                     <h3>MCP Server</h3>
-                    <p>了解 Model Context Protocol，学习如何构建和使用 MCP 服务器进行智能开发。</p>
+                    <p>了解 Model Context Protocol，学习构建智能开发工具的原理。</p>
                 </div>
                 <div class="card">
                     <div class="card-icon">💡</div>
-                    <h3>实战演练</h3>
-                    <p>通过实际项目案例，掌握 DevTools MCP 在真实开发场景中的应用。</p>
+                    <h3>实战应用</h3>
+                    <p>通过实际案例演示 DevTools MCP 在开发中的应用场景。</p>
                 </div>
             </div>
         </section>
@@ -413,69 +419,51 @@
 
     <!-- GDG Section -->
     <section id="gdg" class="hidden">
-        <h2 class="section-title">关于 GDG & DevFest</h2>
+        <h2 class="section-title">关于 GDG 和 DevFest</h2>
+        
         <div class="about-content">
             <div class="about-text">
                 <h3>什么是 GDG？</h3>
-                <p>Google Developer Groups (GDG) 是由 Google 支持的全球开发者社区。GDG 汇聚了对 Google 技术充满热情的开发者，通过定期举办技术分享、研讨会和社交活动，促进知识交流和技术成长。</p>
-                <p>GDG 社区覆盖全球数百个城市，为开发者提供了一个学习、分享和建立联系的平台。无论你是初学者还是资深开发者，都能在 GDG 找到属于自己的位置。</p>
+                <p>Google Developer Groups (GDG) 是由 Google 支持的全球开发者社区。我们汇聚了对 Google 技术充满热情的开发者，通过定期举办技术分享、研讨会和社交活动，促进知识交流和技术成长。</p>
+                <p>GDG 社区覆盖全球数百个城市，为开发者提供了一个学习、分享和建立联系的平台。无论你是初学者还是资深开发者，都能找到属于自己的位置。</p>
             </div>
-            <div class="about-image">
-                🌏
-            </div>
+            <div class="about-image">🌏</div>
         </div>
 
-        <div class="about-content" style="margin-top: 3rem;">
-            <div class="about-image">
-                🎊
-            </div>
+        <div class="about-content" style="margin-top: 2rem;">
+            <div class="about-image">🎊</div>
             <div class="about-text">
                 <h3>什么是 DevFest？</h3>
                 <p>DevFest 是 GDG 社区一年一度的旗舰技术活动，在全球各地同步举办。这是一个为期一天或多天的开发者盛会，汇聚了行业专家、技术爱好者和创新者。</p>
-                <p>DevFest 涵盖 Android、Web、Cloud、AI/ML 等多个技术领域，通过技术演讲、工作坊和代码实验室等形式，帮助开发者了解最新的 Google 技术和行业趋势。</p>
-                <p>DevFest Hangzhou 2025 聚焦于 Chrome DevTools 和 MCP Server，旨在帮助开发者提升调试技能和开发效率。</p>
+                <p>DevFest 涵盖 Android、Web、Cloud、AI/ML 等多个技术领域。DevFest Hangzhou 2025 聚焦于 Chrome DevTools 和 MCP Server，旨在帮助开发者提升调试技能和开发效率。</p>
             </div>
         </div>
     </section>
 
     <!-- DevTools MCP Section -->
     <section id="devtools" class="hidden">
-        <h2 class="section-title">Chrome DevTools MCP Server</h2>
+        <h2 class="section-title">Chrome DevTools MCP</h2>
         
         <div class="about-content">
             <div class="about-text">
                 <h3>Chrome DevTools</h3>
-                <p>Chrome DevTools 是内置在 Google Chrome 浏览器中的一套强大的 Web 开发和调试工具。它提供了丰富的功能来帮助开发者：</p>
-                <p>• 实时编辑和调试 HTML、CSS 和 JavaScript<br>
-                   • 性能分析和优化<br>
-                   • 网络请求监控<br>
-                   • 移动设备模拟<br>
-                   • 内存泄漏检测</p>
-                <p>掌握 DevTools 是每个前端开发者的必备技能，它能显著提升开发效率和代码质量。</p>
+                <p>Chrome DevTools 是内置在 Google Chrome 浏览器中的强大开发者工具。它提供了丰富的功能来帮助开发者实时编辑和调试 HTML、CSS 和 JavaScript。</p>
+                <p>通过 DevTools，你可以分析性能、监控网络请求、模拟移动设备、检测内存泄漏。掌握 DevTools 是每个前端开发者的必备技能。</p>
             </div>
-            <div class="about-image">
-                🔍
-            </div>
+            <div class="about-image">🔍</div>
         </div>
 
-        <div class="about-content" style="margin-top: 3rem;">
-            <div class="about-image">
-                🚀
-            </div>
+        <div class="about-content" style="margin-top: 2rem;">
+            <div class="about-image">🚀</div>
             <div class="about-text">
                 <h3>MCP (Model Context Protocol)</h3>
-                <p>MCP 是一个开放协议,用于在 LLM 应用程序和外部数据源之间实现无缝集成。它标准化了应用程序如何向 LLM 提供上下文的方式。</p>
-                <p>Chrome DevTools MCP Server 将 DevTools 的强大功能通过 MCP 协议暴露出来，使得：</p>
-                <p>• AI 助手可以直接操作浏览器<br>
-                   • 自动化测试和调试流程<br>
-                   • 智能化的开发体验<br>
-                   • 提升开发效率和准确性</p>
-                <p>这代表了 AI 辅助开发的未来方向，让开发者能够通过自然语言与浏览器交互。</p>
+                <p>MCP 是一个开放协议，用于在 LLM 应用程序和外部数据源之间实现无缝集成。Chrome DevTools MCP Server 将 DevTools 的功能通过 MCP 协议暴露出来。</p>
+                <p>这使得 AI 助手可以直接操作浏览器，自动化测试和调试流程，提升开发效率和准确性。这代表了 AI 辅助开发的未来方向。</p>
             </div>
         </div>
 
-        <section style="margin-top: 3rem;">
-            <h2 class="section-title">Workshop 议程</h2>
+        <section style="padding-top: 2rem;">
+            <h2 class="section-title" style="margin-bottom: 1.5rem;">Workshop 议程</h2>
             <div class="cards">
                 <div class="card">
                     <div class="card-icon">📚</div>
@@ -490,7 +478,7 @@
                 <div class="card">
                     <div class="card-icon">🎯</div>
                     <h3>实战项目</h3>
-                    <p>通过实际案例演示如何使用 MCP 进行网页调试、样式调整和性能优化。</p>
+                    <p>通过实际案例演示如何使用 MCP 进行网页调试和性能优化。</p>
                 </div>
             </div>
         </section>
@@ -502,18 +490,18 @@
         <div class="profile-card">
             <div class="profile-avatar">👨‍💻</div>
             <h2>Ryan</h2>
-            <div class="subtitle">浙江工商大学 计算机科学与技术专业 大三学生</div>
+            <div class="subtitle">浙江工商大学 · 计算机科学与技术 · 大三</div>
             
             <div class="profile-info">
                 <p>你好！我是 Ryan，一名热爱技术的计算机科学专业学生。目前就读于浙江工商大学，正处于大三阶段。</p>
                 
-                <p>我对 Web 开发、人工智能和开发者工具有着浓厚的兴趣。参加这次 DevFest Hangzhou 的 Chrome DevTools MCP Workshop，不仅让我深入了解了现代浏览器开发工具的强大功能，更让我认识到 AI 与传统开发工具结合的巨大潜力。</p>
+                <p>我对 Web 开发、人工智能和开发者工具有着浓厚的兴趣。参加这次 DevFest Hangzhou 的 Chrome DevTools MCP Workshop，让我深入了解了现代浏览器开发工具的强大功能，也认识到 AI 与传统开发工具结合的巨大潜力。</p>
                 
                 <p>通过这个网站，我记录了本次 Workshop 的学习收获和心得体会。希望能与更多开发者交流学习，共同成长。</p>
                 
-                <p style="margin-top: 2rem; text-align: center;">
+                <p style="margin-top: 1.5rem;">
                     <a href="https://github.com/Ryan041001" target="_blank" class="social-link">
-                        🔗 GitHub: Ryan041001
+                        GitHub: Ryan041001
                     </a>
                 </p>
             </div>
@@ -523,7 +511,7 @@
     <!-- Footer -->
     <footer>
         <p>© 2025 DevFest Hangzhou - Chrome DevTools MCP Workshop</p>
-        <p style="margin-top: 0.5rem;">Made with ❤️ by Ryan</p>
+        <p>Made with ❤️ by Ryan</p>
     </footer>
 
     <script>
