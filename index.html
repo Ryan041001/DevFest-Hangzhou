@@ -13,22 +13,46 @@
         }
         
         :root {
-            --google-blue: #4285f4;
-            --google-red: #ea4335;
-            --google-yellow: #fbbc04;
-            --google-green: #34a853;
-            --text-primary: #202124;
-            --text-secondary: #5f6368;
-            --bg-light: #ffffff;
-            --bg-gray: #f8f9fa;
-            --border-light: #dadce0;
+            --primary-dark: #0f1419;
+            --secondary-dark: #1a1f2e;
+            --tertiary-dark: #252d3d;
+            --accent-blue: #4a9eff;
+            --accent-purple: #8b5cf6;
+            --accent-cyan: #00d4ff;
+            --text-primary: #ffffff;
+            --text-secondary: #b0b8c1;
+            --glass-light: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.12);
         }
         
         body {
             font-family: 'Roboto', sans-serif;
             color: var(--text-primary);
-            line-height: 1.6;
-            background: var(--bg-gray);
+            background: linear-gradient(135deg, var(--primary-dark) 0%, #1a0f2e 50%, var(--primary-dark) 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* Starfield Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(2px 2px at 20px 30px, #eee, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 60px 70px, #fff, rgba(0,0,0,0)),
+                radial-gradient(1px 1px at 50px 50px, #fff, rgba(0,0,0,0)),
+                radial-gradient(1px 1px at 130px 80px, #fff, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 90px 10px, #fff, rgba(0,0,0,0));
+            background-repeat: repeat;
+            background-size: 200px 200px;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.3;
         }
         
         /* Navigation */
@@ -36,33 +60,36 @@
             position: sticky;
             top: 0;
             width: 100%;
-            background: var(--bg-light);
-            border-bottom: 1px solid var(--border-light);
+            background: rgba(15, 20, 25, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--glass-border);
             z-index: 1000;
-            padding: 0.75rem 0;
+            padding: 1rem 0;
         }
         
         .nav-container {
-            max-width: 100%;
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 0 1.5rem;
+            padding: 0 2rem;
             display: flex;
-            justify-content: flex-start;
+            justify-content: space-between;
             align-items: center;
-            gap: 2.5rem;
         }
         
         .logo {
             font-family: 'Google Sans', sans-serif;
-            font-size: 1.3rem;
-            font-weight: 500;
-            color: var(--text-primary);
-            letter-spacing: 0.5px;
+            font-size: 1.4rem;
+            font-weight: 600;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 1px;
         }
         
         .nav-links {
             display: flex;
-            gap: 1.5rem;
+            gap: 2rem;
             list-style: none;
         }
         
@@ -71,93 +98,145 @@
             text-decoration: none;
             font-weight: 400;
             font-size: 0.95rem;
-            transition: color 0.2s;
+            transition: all 0.3s;
             cursor: pointer;
-            padding: 0.5rem 0;
-            border-bottom: 2px solid transparent;
+            position: relative;
         }
         
-        .nav-links a:hover {
-            color: var(--google-blue);
-        }
-        
+        .nav-links a:hover,
         .nav-links a.active {
-            color: var(--google-blue);
-            border-bottom-color: var(--google-blue);
+            color: var(--accent-blue);
         }
         
-        /* Hero Section - Minimal */
+        .nav-links a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-blue));
+        }
+        
+        /* Content wrapper */
+        main {
+            position: relative;
+            z-index: 2;
+        }
+        
+        /* Hero Section */
         .hero {
-            background: var(--bg-light);
-            padding: 4rem 1.5rem;
+            background: linear-gradient(135deg, rgba(74, 158, 255, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+            padding: 6rem 2rem;
             text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(74, 158, 255, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -50%;
+            left: -5%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
         }
         
         .hero h1 {
             font-family: 'Google Sans', sans-serif;
-            font-size: 2.8rem;
+            font-size: 3.2rem;
             font-weight: 700;
             margin-bottom: 0.5rem;
-            color: var(--text-primary);
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+            z-index: 1;
         }
         
         .hero .subtitle {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             margin-bottom: 0.3rem;
             color: var(--text-secondary);
             font-weight: 400;
+            position: relative;
+            z-index: 1;
         }
         
         .hero .date-location {
-            font-size: 0.95rem;
+            font-size: 1rem;
             margin-bottom: 2rem;
-            color: var(--text-secondary);
+            color: var(--accent-cyan);
+            position: relative;
+            z-index: 1;
         }
         
         .cta-buttons {
             display: flex;
             gap: 1rem;
             justify-content: center;
+            position: relative;
+            z-index: 1;
         }
         
         .btn {
-            padding: 0.75rem 1.5rem;
-            border-radius: 4px;
+            padding: 0.85rem 1.8rem;
+            border-radius: 8px;
             font-weight: 500;
             text-decoration: none;
-            transition: all 0.2s;
+            transition: all 0.3s;
             cursor: pointer;
             border: none;
             font-size: 0.95rem;
-            letter-spacing: 0.3px;
+            letter-spacing: 0.5px;
+            backdrop-filter: blur(10px);
         }
         
         .btn-primary {
-            background: var(--google-blue);
-            color: white;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+            color: var(--primary-dark);
+            border: 1px solid var(--glass-border);
         }
         
         .btn-primary:hover {
-            background: #1d66d6;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+            box-shadow: 0 0 20px rgba(74, 158, 255, 0.4);
+            transform: translateY(-2px);
         }
         
         .btn-secondary {
-            background: var(--bg-gray);
-            color: var(--google-blue);
-            border: 1px solid var(--border-light);
+            background: var(--glass-light);
+            color: var(--accent-blue);
+            border: 1px solid var(--glass-border);
         }
         
         .btn-secondary:hover {
-            background: #f1f3f4;
-            border-color: var(--border-light);
+            background: var(--tertiary-dark);
+            box-shadow: 0 0 20px rgba(74, 158, 255, 0.2);
         }
         
         /* Sections */
         section {
-            padding: 3rem 1.5rem;
-            max-width: 1200px;
+            padding: 3.5rem 2rem;
+            max-width: 1400px;
             margin: 0 auto;
+            position: relative;
+            z-index: 2;
         }
         
         section.hidden {
@@ -166,45 +245,51 @@
         
         .section-title {
             font-family: 'Google Sans', sans-serif;
-            font-size: 2rem;
-            font-weight: 500;
-            margin-bottom: 2rem;
-            color: var(--text-primary);
-            letter-spacing: 0.3px;
+            font-size: 2.2rem;
+            font-weight: 600;
+            margin-bottom: 2.5rem;
+            text-align: center;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
         
-        /* Cards - Clean minimal */
+        /* Cards - Glassmorphism */
         .cards {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 1.5rem;
             margin-top: 2rem;
         }
         
         .card {
-            background: var(--bg-light);
-            border-radius: 8px;
-            padding: 1.5rem;
-            border: 1px solid var(--border-light);
-            transition: all 0.2s;
+            background: var(--glass-light);
+            border-radius: 12px;
+            padding: 2rem;
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
         }
         
         .card:hover {
-            border-color: var(--google-blue);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            background: var(--glass-light);
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 20px rgba(74, 158, 255, 0.15);
+            transform: translateY(-4px);
         }
         
         .card-icon {
-            font-size: 2.5rem;
+            font-size: 2.8rem;
             margin-bottom: 1rem;
         }
         
         .card h3 {
             font-family: 'Google Sans', sans-serif;
-            font-size: 1.2rem;
-            margin-bottom: 0.75rem;
-            color: var(--text-primary);
-            font-weight: 500;
+            font-size: 1.3rem;
+            margin-bottom: 0.8rem;
+            color: var(--accent-cyan);
+            font-weight: 600;
         }
         
         .card p {
@@ -217,21 +302,22 @@
         .about-content {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 2.5rem;
+            gap: 2rem;
             align-items: start;
             margin-top: 1.5rem;
-            background: var(--bg-light);
-            padding: 2rem;
-            border-radius: 8px;
-            border: 1px solid var(--border-light);
+            background: var(--glass-light);
+            padding: 2.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
         }
         
         .about-text h3 {
             font-family: 'Google Sans', sans-serif;
-            font-size: 1.4rem;
+            font-size: 1.5rem;
             margin-bottom: 1rem;
-            color: var(--text-primary);
-            font-weight: 500;
+            color: var(--accent-blue);
+            font-weight: 600;
         }
         
         .about-text p {
@@ -242,9 +328,10 @@
         }
         
         .about-image {
-            background: linear-gradient(135deg, var(--google-blue), var(--google-green));
-            border-radius: 8px;
-            height: 250px;
+            background: linear-gradient(135deg, rgba(74, 158, 255, 0.2), rgba(139, 92, 246, 0.2));
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+            height: 280px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -254,32 +341,35 @@
         /* Profile Section */
         .profile-card {
             max-width: 700px;
-            margin: 1.5rem auto;
-            background: var(--bg-light);
-            border-radius: 8px;
+            margin: 2rem auto;
+            background: var(--glass-light);
+            border-radius: 12px;
             padding: 2.5rem;
-            border: 1px solid var(--border-light);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
             text-align: center;
         }
         
         .profile-avatar {
-            width: 120px;
-            height: 120px;
+            width: 130px;
+            height: 130px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--google-blue), var(--google-red));
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
             margin: 0 auto 1.5rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 3rem;
-            color: white;
+            font-size: 3.5rem;
+            color: var(--primary-dark);
+            border: 2px solid var(--glass-border);
         }
         
         .profile-card h2 {
             font-family: 'Google Sans', sans-serif;
             font-size: 1.8rem;
             margin-bottom: 0.3rem;
-            font-weight: 500;
+            font-weight: 600;
+            color: var(--accent-cyan);
         }
         
         .profile-card .subtitle {
@@ -304,29 +394,33 @@
         .social-link {
             display: inline-block;
             margin-top: 1.5rem;
-            padding: 0.75rem 1.5rem;
-            background: var(--google-blue);
-            color: white;
+            padding: 0.85rem 1.8rem;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+            color: var(--primary-dark);
             text-decoration: none;
-            border-radius: 4px;
-            transition: all 0.2s;
-            font-weight: 500;
+            border-radius: 8px;
+            transition: all 0.3s;
+            font-weight: 600;
             font-size: 0.95rem;
+            border: 1px solid var(--glass-border);
         }
         
         .social-link:hover {
-            background: #1d66d6;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+            box-shadow: 0 0 20px rgba(74, 158, 255, 0.4);
+            transform: translateY(-2px);
         }
         
         /* Footer */
         footer {
-            background: var(--bg-light);
+            background: var(--glass-light);
+            border-top: 1px solid var(--glass-border);
             color: var(--text-secondary);
-            padding: 2rem 1.5rem;
+            padding: 2.5rem 2rem;
             text-align: center;
-            border-top: 1px solid var(--border-light);
             font-size: 0.9rem;
+            position: relative;
+            z-index: 2;
+            backdrop-filter: blur(10px);
         }
         
         footer p {
@@ -336,17 +430,16 @@
         /* Responsive */
         @media (max-width: 768px) {
             .hero h1 {
-                font-size: 2rem;
+                font-size: 2.2rem;
             }
             
-            .nav-container {
-                flex-wrap: wrap;
-                gap: 1rem;
+            .logo {
+                font-size: 1.2rem;
             }
             
             .nav-links {
                 gap: 1rem;
-                flex-wrap: wrap;
+                font-size: 0.9rem;
             }
             
             .cta-buttons {
@@ -364,12 +457,13 @@
             }
             
             .section-title {
-                font-size: 1.5rem;
+                font-size: 1.6rem;
             }
         }
     </style>
 </head>
 <body>
+    <main>
     <!-- Navigation -->
     <nav>
         <div class="nav-container">
@@ -513,6 +607,8 @@
         <p>© 2025 DevFest Hangzhou - Chrome DevTools MCP Workshop</p>
         <p>Made with ❤️ by Ryan</p>
     </footer>
+
+    </main>
 
     <script>
         function showSection(sectionId) {
