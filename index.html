@@ -1,640 +1,1373 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html lang="zh-CN" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>DevFest Hangzhou 2025 - Chrome DevTools MCP Workshop</title>
-    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@300;400;500;700&display=swap"
+      rel="stylesheet"
+    />
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        :root {
-            --primary-dark: #0f1419;
-            --secondary-dark: #1a1f2e;
-            --tertiary-dark: #252d3d;
-            --accent-blue: #4a9eff;
-            --accent-purple: #8b5cf6;
-            --accent-cyan: #00d4ff;
-            --text-primary: #ffffff;
-            --text-secondary: #b0b8c1;
-            --glass-light: rgba(255, 255, 255, 0.08);
-            --glass-border: rgba(255, 255, 255, 0.12);
-        }
-        
-        body {
-            font-family: 'Roboto', sans-serif;
-            color: var(--text-primary);
-            background: linear-gradient(135deg, var(--primary-dark) 0%, #1a0f2e 50%, var(--primary-dark) 100%);
-            min-height: 100vh;
-            overflow-x: hidden;
-            position: relative;
-        }
-        
-        /* Starfield Background */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                radial-gradient(2px 2px at 20px 30px, #eee, rgba(0,0,0,0)),
-                radial-gradient(2px 2px at 60px 70px, #fff, rgba(0,0,0,0)),
-                radial-gradient(1px 1px at 50px 50px, #fff, rgba(0,0,0,0)),
-                radial-gradient(1px 1px at 130px 80px, #fff, rgba(0,0,0,0)),
-                radial-gradient(2px 2px at 90px 10px, #fff, rgba(0,0,0,0));
-            background-repeat: repeat;
-            background-size: 200px 200px;
-            pointer-events: none;
-            z-index: 1;
-            opacity: 0.3;
-        }
-        
-        /* Navigation */
-        nav {
-            position: sticky;
-            top: 0;
-            width: 100%;
-            background: rgba(15, 20, 25, 0.8);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--glass-border);
-            z-index: 1000;
-            padding: 1rem 0;
-        }
-        
-        .nav-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .logo {
-            font-family: 'Google Sans', sans-serif;
-            font-size: 1.4rem;
-            font-weight: 600;
-            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-blue));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            letter-spacing: 1px;
-        }
-        
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            list-style: none;
-        }
-        
-        .nav-links a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-weight: 400;
-            font-size: 0.95rem;
-            transition: all 0.3s;
-            cursor: pointer;
-            position: relative;
-        }
-        
-        .nav-links a:hover,
-        .nav-links a.active {
-            color: var(--accent-blue);
-        }
-        
-        .nav-links a.active::after {
-            content: '';
-            position: absolute;
-            bottom: -8px;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-blue));
-        }
-        
-        /* Content wrapper */
-        main {
-            position: relative;
-            z-index: 2;
-        }
-        
-        /* Hero Section */
-        .hero {
-            background: linear-gradient(135deg, rgba(74, 158, 255, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
-            padding: 6rem 2rem;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -10%;
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, rgba(74, 158, 255, 0.1) 0%, transparent 70%);
-            border-radius: 50%;
-            pointer-events: none;
-        }
-        
-        .hero::after {
-            content: '';
-            position: absolute;
-            bottom: -50%;
-            left: -5%;
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 70%);
-            border-radius: 50%;
-            pointer-events: none;
-        }
-        
-        .hero h1 {
-            font-family: 'Google Sans', sans-serif;
-            font-size: 3.2rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-blue));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .hero .subtitle {
-            font-size: 1.2rem;
-            margin-bottom: 0.3rem;
-            color: var(--text-secondary);
-            font-weight: 400;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .hero .date-location {
-            font-size: 1rem;
-            margin-bottom: 2rem;
-            color: var(--accent-cyan);
-            position: relative;
-            z-index: 1;
-        }
-        
-        .cta-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .btn {
-            padding: 0.85rem 1.8rem;
-            border-radius: 8px;
-            font-weight: 500;
-            text-decoration: none;
-            transition: all 0.3s;
-            cursor: pointer;
-            border: none;
-            font-size: 0.95rem;
-            letter-spacing: 0.5px;
-            backdrop-filter: blur(10px);
-        }
-        
-        .btn-primary {
-            background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
-            color: var(--primary-dark);
-            border: 1px solid var(--glass-border);
-        }
-        
-        .btn-primary:hover {
-            box-shadow: 0 0 20px rgba(74, 158, 255, 0.4);
-            transform: translateY(-2px);
-        }
-        
-        .btn-secondary {
-            background: var(--glass-light);
-            color: var(--accent-blue);
-            border: 1px solid var(--glass-border);
-        }
-        
-        .btn-secondary:hover {
-            background: var(--tertiary-dark);
-            box-shadow: 0 0 20px rgba(74, 158, 255, 0.2);
-        }
-        
-        /* Sections */
-        section {
-            padding: 3.5rem 2rem;
-            max-width: 1400px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 2;
-        }
-        
-        section.hidden {
-            display: none;
-        }
-        
-        .section-title {
-            font-family: 'Google Sans', sans-serif;
-            font-size: 2.2rem;
-            font-weight: 600;
-            margin-bottom: 2.5rem;
-            text-align: center;
-            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-blue));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        
-        /* Cards - Glassmorphism */
-        .cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin-top: 2rem;
-        }
-        
-        .card {
-            background: var(--glass-light);
-            border-radius: 12px;
-            padding: 2rem;
-            border: 1px solid var(--glass-border);
-            backdrop-filter: blur(10px);
-            transition: all 0.3s;
-        }
-        
-        .card:hover {
-            background: var(--glass-light);
-            border-color: var(--accent-blue);
-            box-shadow: 0 0 20px rgba(74, 158, 255, 0.15);
-            transform: translateY(-4px);
-        }
-        
-        .card-icon {
-            font-size: 2.8rem;
-            margin-bottom: 1rem;
-        }
-        
-        .card h3 {
-            font-family: 'Google Sans', sans-serif;
-            font-size: 1.3rem;
-            margin-bottom: 0.8rem;
-            color: var(--accent-cyan);
-            font-weight: 600;
-        }
-        
-        .card p {
-            color: var(--text-secondary);
-            line-height: 1.7;
-            font-size: 0.95rem;
-        }
-        
-        /* About Section */
-        .about-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-            align-items: start;
-            margin-top: 1.5rem;
-            background: var(--glass-light);
-            padding: 2.5rem;
-            border-radius: 12px;
-            border: 1px solid var(--glass-border);
-            backdrop-filter: blur(10px);
-        }
-        
-        .about-text h3 {
-            font-family: 'Google Sans', sans-serif;
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            color: var(--accent-blue);
-            font-weight: 600;
-        }
-        
-        .about-text p {
-            color: var(--text-secondary);
-            margin-bottom: 1rem;
-            line-height: 1.8;
-            font-size: 0.95rem;
-        }
-        
-        .about-image {
-            background: linear-gradient(135deg, rgba(74, 158, 255, 0.2), rgba(139, 92, 246, 0.2));
-            border-radius: 12px;
-            border: 1px solid var(--glass-border);
-            height: 280px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 5rem;
-        }
-        
-        /* Profile Section */
-        .profile-card {
-            max-width: 700px;
-            margin: 2rem auto;
-            background: var(--glass-light);
-            border-radius: 12px;
-            padding: 2.5rem;
-            border: 1px solid var(--glass-border);
-            backdrop-filter: blur(10px);
-            text-align: center;
-        }
-        
-        .profile-avatar {
-            width: 130px;
-            height: 130px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
-            margin: 0 auto 1.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3.5rem;
-            color: var(--primary-dark);
-            border: 2px solid var(--glass-border);
-        }
-        
-        .profile-card h2 {
-            font-family: 'Google Sans', sans-serif;
-            font-size: 1.8rem;
-            margin-bottom: 0.3rem;
-            font-weight: 600;
-            color: var(--accent-cyan);
-        }
-        
-        .profile-card .subtitle {
-            color: var(--text-secondary);
-            font-size: 1rem;
-            margin-bottom: 1.5rem;
-            font-weight: 400;
-        }
-        
-        .profile-info {
-            text-align: left;
-            margin-top: 1.5rem;
-        }
-        
-        .profile-info p {
-            color: var(--text-secondary);
-            margin-bottom: 0.8rem;
-            line-height: 1.8;
-            font-size: 0.95rem;
-        }
-        
-        .social-link {
-            display: inline-block;
-            margin-top: 1.5rem;
-            padding: 0.85rem 1.8rem;
-            background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
-            color: var(--primary-dark);
-            text-decoration: none;
-            border-radius: 8px;
-            transition: all 0.3s;
-            font-weight: 600;
-            font-size: 0.95rem;
-            border: 1px solid var(--glass-border);
-        }
-        
-        .social-link:hover {
-            box-shadow: 0 0 20px rgba(74, 158, 255, 0.4);
-            transform: translateY(-2px);
-        }
-        
-        /* Footer */
-        footer {
-            background: var(--glass-light);
-            border-top: 1px solid var(--glass-border);
-            color: var(--text-secondary);
-            padding: 2.5rem 2rem;
-            text-align: center;
-            font-size: 0.9rem;
-            position: relative;
-            z-index: 2;
-            backdrop-filter: blur(10px);
-        }
-        
-        footer p {
-            margin: 0.5rem 0;
-        }
-        
-        /* Responsive */
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2.2rem;
-            }
-            
-            .logo {
-                font-size: 1.2rem;
-            }
-            
-            .nav-links {
-                gap: 1rem;
-                font-size: 0.9rem;
-            }
-            
-            .cta-buttons {
-                flex-direction: column;
-            }
-            
-            .about-content {
-                grid-template-columns: 1fr;
-                padding: 1.5rem;
-            }
-            
-            .cards {
-                grid-template-columns: 1fr;
-                gap: 1rem;
-            }
-            
-            .section-title {
-                font-size: 1.6rem;
-            }
-        }
-    </style>
-</head>
-<body>
-    <main>
-    <!-- Navigation -->
-    <nav>
-        <div class="nav-container">
-            <div class="logo">DevFest Hangzhou</div>
-            <ul class="nav-links">
-                <li><a href="#home" class="nav-link active" onclick="showSection('home')">首页</a></li>
-                <li><a href="#gdg" class="nav-link" onclick="showSection('gdg')">关于 GDG</a></li>
-                <li><a href="#devtools" class="nav-link" onclick="showSection('devtools')">DevTools MCP</a></li>
-                <li><a href="#about" class="nav-link" onclick="showSection('about')">关于我</a></li>
-            </ul>
-        </div>
-    </nav>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-    <!-- Home Section -->
-    <section id="home">
+      :root {
+        --primary-dark: #0f1419;
+        --secondary-dark: #1a1f2e;
+        --tertiary-dark: #252d3d;
+        --accent-blue: #4a9eff;
+        --accent-blue-dark: #3a8ee6;
+        --accent-purple: #8b5cf6;
+        --accent-cyan: #00d4ff;
+        --text-primary: #ffffff;
+        --text-secondary: #b0b8c1;
+        --glass-light: rgba(255, 255, 255, 0.08);
+        --glass-border: rgba(255, 255, 255, 0.12);
+        --blur-strong: 32px;
+        --blur-medium: 14px;
+        --blur-light: 10px;
+        --glow-strong: rgba(74, 158, 255, 0.45);
+        --glow-soft: rgba(74, 158, 255, 0.2);
+        --noise-opacity: 0.05;
+        --bg-1: var(--primary-dark);
+        --bg-2: #1a0f2e;
+        --nav-bg: rgba(15, 20, 25, 0.65);
+        --shadow-soft: rgba(0, 0, 0, 0.12);
+        --shadow-strong: rgba(0, 0, 0, 0.28);
+        --glass-elev: 0 6px 18px rgba(15, 20, 25, 0.18);
+        --glass-elev-strong: 0 12px 36px rgba(15, 20, 25, 0.22);
+        --radius-sm: 6px;
+        --radius-md: 12px;
+        --radius-lg: 18px;
+        --radius-xl: 26px;
+        --accent-blue-15: rgba(74, 158, 255, 0.15);
+        --accent-blue-25: rgba(74, 158, 255, 0.25);
+        --icon-highlight: rgba(255, 255, 255, 0.6);
+        --icon-base: rgba(74, 158, 255, 1);
+      }
+
+      html[data-performance="low"] {
+        --blur-strong: 14px;
+        --blur-medium: 9px;
+        --blur-light: 5px;
+        --glow-strong: rgba(74, 158, 255, 0.3);
+        --glow-soft: rgba(74, 158, 255, 0.12);
+        --noise-opacity: 0.03;
+      }
+
+      html[data-theme="light"] {
+        --bg-1: #f6f8fc;
+        --bg-2: #eaf0ff;
+        --text-primary: #0f1419;
+        --text-secondary: #4b5563;
+        --glass-light: rgba(255, 255, 255, 0.6);
+        --glass-border: rgba(17, 24, 39, 0.08);
+        --nav-bg: rgba(255, 255, 255, 0.6);
+        --noise-opacity: 0.05;
+      }
+
+      body {
+        font-family: "Roboto", sans-serif;
+        color: var(--text-primary);
+        background: linear-gradient(
+          135deg,
+          var(--bg-1) 0%,
+          var(--bg-2) 50%,
+          var(--bg-1) 100%
+        );
+        min-height: 100vh;
+        overflow-x: hidden;
+        position: relative;
+      }
+
+      /* Starfield Background */
+      body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: radial-gradient(
+            2px 2px at 20px 30px,
+            #eee,
+            rgba(0, 0, 0, 0)
+          ),
+          radial-gradient(2px 2px at 60px 70px, #fff, rgba(0, 0, 0, 0)),
+          radial-gradient(1px 1px at 50px 50px, #fff, rgba(0, 0, 0, 0)),
+          radial-gradient(1px 1px at 130px 80px, #fff, rgba(0, 0, 0, 0)),
+          radial-gradient(2px 2px at 90px 10px, #fff, rgba(0, 0, 0, 0));
+        background-repeat: repeat;
+        background-size: 200px 200px;
+        pointer-events: none;
+        z-index: 1;
+        opacity: 0.2;
+      }
+
+      body::after {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: radial-gradient(
+            800px 800px at 20% 10%,
+            rgba(139, 92, 246, 0.12),
+            rgba(0, 0, 0, 0)
+          ),
+          radial-gradient(
+            900px 900px at 80% 70%,
+            rgba(74, 158, 255, 0.12),
+            rgba(0, 0, 0, 0)
+          ),
+          linear-gradient(
+            rgba(255, 255, 255, var(--noise-opacity)),
+            rgba(255, 255, 255, 0)
+          );
+        filter: blur(20px);
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      /* Navigation */
+      nav {
+        position: sticky;
+        top: 0;
+        width: 100%;
+        background: var(--nav-bg);
+        backdrop-filter: blur(var(--blur-strong)) saturate(140%);
+        border-bottom: 1px solid var(--glass-border);
+        z-index: 1000;
+        padding: 1rem 0.6rem;
+        border-radius: var(--radius-lg);
+        box-shadow: 0 4px 8px var(--shadow-soft);
+      }
+
+      .nav-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 1.25rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo {
+        font-family: "Google Sans", sans-serif;
+        font-size: 1.25rem;
+        font-weight: 700;
+        letter-spacing: 1.3px;
+        background: linear-gradient(
+          90deg,
+          var(--accent-cyan),
+          var(--accent-blue)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        letter-spacing: 1px;
+      }
+
+      /* Performance button styles removed */
+
+      .nav-links {
+        display: flex;
+        gap: 2rem;
+        list-style: none;
+      }
+
+      .nav-links a {
+        color: var(--text-secondary);
+        text-decoration: none;
+        font-weight: 400;
+        font-size: 0.95rem;
+        transition: all 0.3s;
+        /* nav-open class no longer used */
+        cursor: pointer;
+        position: relative;
+        padding: 0.45rem 0.6rem;
+        border-radius: var(--radius-md);
+      }
+
+      .nav-links a:hover,
+      .nav-links a.active {
+        color: var(--accent-blue);
+        background: linear-gradient(
+          135deg,
+          rgba(74, 158, 255, 0.06),
+          rgba(139, 92, 246, 0.03)
+        );
+      }
+
+      .nav-links a.active::after {
+        content: "";
+        position: absolute;
+        bottom: -8px;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          var(--accent-cyan),
+          var(--accent-blue)
+        );
+      }
+
+      /* Content wrapper */
+      main {
+        position: relative;
+        z-index: 2;
+      }
+
+      /* Hero Section */
+      .hero {
+        background: linear-gradient(
+          135deg,
+          rgba(74, 158, 255, 0.1) 0%,
+          rgba(139, 92, 246, 0.1) 100%
+        );
+        padding: 4.5rem 2rem;
+        border-radius: var(--radius-xl);
+        margin: 2rem auto;
+        max-width: 1200px;
+        box-shadow: var(--glass-elev-strong);
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .hero::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        right: -10%;
+        width: 600px;
+        height: 600px;
+        background: radial-gradient(
+          circle,
+          rgba(74, 158, 255, 0.1) 0%,
+          transparent 70%
+        );
+        border-radius: 50%;
+        pointer-events: none;
+        filter: blur(var(--blur-strong));
+      }
+
+      .hero::after {
+        content: "";
+        position: absolute;
+        bottom: -50%;
+        left: -5%;
+        width: 500px;
+        height: 500px;
+        background: radial-gradient(
+          circle,
+          rgba(139, 92, 246, 0.1) 0%,
+          transparent 70%
+        );
+        border-radius: 50%;
+        pointer-events: none;
+        filter: blur(var(--blur-medium));
+      }
+
+      .hero h1 {
+        font-family: "Google Sans", sans-serif;
+        font-size: 2.6rem;
+        font-weight: 800;
+        margin-bottom: 0.5rem;
+        background: linear-gradient(
+          90deg,
+          var(--accent-cyan),
+          var(--accent-blue)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        position: relative;
+        z-index: 1;
+        text-shadow: 0 4px 22px var(--glow-soft),
+          0 1px 0 rgba(255, 255, 255, 0.06);
+      }
+
+      .hero .subtitle {
+        font-size: 1.2rem;
+        margin-bottom: 0.3rem;
+        color: var(--text-secondary);
+        font-weight: 400;
+        position: relative;
+        z-index: 1;
+      }
+
+      .hero .date-location {
+        font-size: 1rem;
+        margin-bottom: 2rem;
+        color: var(--accent-cyan);
+        position: relative;
+        z-index: 1;
+      }
+
+      .cta-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        position: relative;
+        z-index: 1;
+      }
+
+      .btn {
+        padding: 0.85rem 1.8rem;
+        border-radius: var(--radius-md);
+        font-weight: 500;
+        text-decoration: none;
+        transition: transform 0.1s ease, box-shadow 0.1s ease,
+          background 0.1s ease, color 0.1s ease;
+        cursor: pointer;
+        border: none;
+        font-size: 0.95rem;
+        letter-spacing: 0.5px;
+        backdrop-filter: blur(var(--blur-medium));
+        box-shadow: 0 8px 24px rgba(15, 20, 25, 0.1);
+      }
+
+      .btn-primary {
+        background: linear-gradient(
+          135deg,
+          var(--accent-blue),
+          var(--accent-blue-dark)
+        );
+        color: var(--primary-dark);
+        border: 1px solid var(--glass-border);
+      }
+
+      .btn-primary:hover {
+        box-shadow: 0 4px 8px var(--shadow-strong);
+        transform: translateY(-1px);
+      }
+
+      .btn-secondary {
+        background: var(--glass-light);
+        color: var(--accent-blue);
+        border: 1px solid var(--glass-border);
+        box-shadow: 0 2px 4px var(--shadow-soft);
+      }
+
+      .btn-secondary:hover {
+        background: var(--glass-light);
+        box-shadow: 0 4px 8px var(--shadow-strong);
+        transform: translateY(-1px);
+      }
+
+      /* Sections */
+      section {
+        padding: 3.5rem 2rem;
+        max-width: 1400px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 2;
+      }
+
+      section.hidden {
+        display: none;
+      }
+
+      .section-title {
+        font-family: "Google Sans", sans-serif;
+        font-size: 2.2rem;
+        font-weight: 600;
+        margin-bottom: 2.5rem;
+        text-align: center;
+        background: linear-gradient(
+          90deg,
+          var(--accent-cyan),
+          var(--accent-blue)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      /* Cards - Glassmorphism */
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+        margin-top: 2rem;
+      }
+
+      .card {
+        background: var(--glass-light);
+        border-radius: var(--radius-lg);
+        padding: 2rem;
+        border: 1px solid var(--glass-border);
+        backdrop-filter: blur(var(--blur-medium));
+        transition: transform 0.1s ease, box-shadow 0.1s ease,
+          border-color 0.1s ease;
+        box-shadow: 0 10px 30px rgba(15, 20, 25, 0.06),
+          inset 0 4px 10px rgba(255, 255, 255, 0.06);
+      }
+
+      .card:hover {
+        background: var(--glass-light);
+        border-color: var(--accent-blue);
+        box-shadow: 0 24px 48px rgba(15, 20, 25, 0.16),
+          inset 0 2px 4px rgba(255, 255, 255, 0.08);
+        transform: perspective(700px) rotateX(4deg) translateY(-8px);
+        will-change: transform, box-shadow;
+      }
+
+      .card-icon {
+        font-size: 2.8rem;
+        margin-bottom: 1rem;
+        background: linear-gradient(
+          135deg,
+          var(--accent-cyan),
+          var(--accent-blue)
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        filter: drop-shadow(0 1px 0 var(--icon-highlight))
+          drop-shadow(0 6px 18px var(--glow-soft));
+      }
+
+      .card h3 {
+        font-family: "Google Sans", sans-serif;
+        font-size: 1.3rem;
+        margin-bottom: 0.8rem;
+        color: var(--accent-cyan);
+        font-weight: 600;
+      }
+
+      .card p {
+        color: var(--text-secondary);
+        line-height: 1.7;
+        font-size: 0.95rem;
+      }
+
+      /* About Section */
+      .about-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        align-items: start;
+        margin-top: 1.5rem;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.06),
+          rgba(255, 255, 255, 0.02)
+        );
+        padding: 1.5rem;
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--glass-border);
+        backdrop-filter: blur(var(--blur-medium));
+        box-shadow: 0 6px 12px var(--shadow-soft),
+          inset 0 1px 2px rgba(255, 255, 255, 0.6);
+      }
+
+      .about-text h3 {
+        font-family: "Google Sans", sans-serif;
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        color: var(--accent-blue);
+        font-weight: 600;
+      }
+
+      .about-text p {
+        color: var(--text-secondary);
+        margin-bottom: 1rem;
+        line-height: 1.8;
+        font-size: 0.95rem;
+      }
+
+      .about-image {
+        background: linear-gradient(
+          135deg,
+          rgba(74, 158, 255, 0.2),
+          rgba(139, 92, 246, 0.2)
+        );
+        border-radius: var(--radius-xl);
+        border: 1px solid var(--glass-border);
+        height: 280px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 5rem;
+        box-shadow: 0 6px 12px var(--shadow-soft),
+          inset 0 1px 2px rgba(255, 255, 255, 0.6);
+      }
+
+      /* Profile Section */
+      .profile-card {
+        max-width: 700px;
+        margin: 2rem auto;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.04),
+          rgba(255, 255, 255, 0.02)
+        );
+        border-radius: var(--radius-lg);
+        padding: 2.5rem;
+        border: 1px solid var(--glass-border);
+        backdrop-filter: blur(var(--blur-medium));
+        text-align: center;
+        box-shadow: 0 16px 40px rgba(15, 20, 25, 0.08),
+          inset 0 1px 2px rgba(255, 255, 255, 0.6);
+      }
+
+      .profile-avatar {
+        width: 130px;
+        height: 130px;
+        border-radius: 50%;
+        background: linear-gradient(
+          135deg,
+          var(--accent-blue),
+          var(--accent-cyan)
+        );
+        margin: 0 auto 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3.5rem;
+        color: var(--primary-dark);
+        border: 2px solid var(--glass-border);
+        box-shadow: 0 12px 46px rgba(74, 158, 255, 0.12),
+          0 6px 20px rgba(0, 0, 0, 0.18);
+      }
+
+      .profile-card h2 {
+        font-family: "Google Sans", sans-serif;
+        font-size: 1.8rem;
+        margin-bottom: 0.3rem;
+        font-weight: 600;
+        color: var(--accent-cyan);
+      }
+
+      .profile-card .subtitle {
+        color: var(--text-secondary);
+        font-size: 1rem;
+        margin-bottom: 1.5rem;
+        font-weight: 400;
+      }
+
+      .profile-info {
+        text-align: left;
+        margin-top: 1.5rem;
+      }
+
+      .profile-info p {
+        color: var(--text-secondary);
+        margin-bottom: 0.8rem;
+        line-height: 1.8;
+        font-size: 0.95rem;
+      }
+
+      .social-link {
+        display: inline-block;
+        margin-top: 1.5rem;
+        padding: 0.85rem 1.8rem;
+        background: linear-gradient(
+          135deg,
+          var(--accent-blue),
+          var(--accent-blue-dark)
+        );
+        color: var(--primary-dark);
+        text-decoration: none;
+        border-radius: var(--radius-md);
+        transition: all 0.3s;
+        font-weight: 600;
+        font-size: 0.95rem;
+        border: 1px solid var(--glass-border);
+        box-shadow: 0 2px 4px var(--shadow-soft);
+      }
+
+      .social-link:hover {
+        box-shadow: 0 4px 8px var(--shadow-strong);
+        transform: translateY(-1px);
+      }
+
+      /* Footer */
+      footer {
+        background: var(--glass-light);
+        border-top: 1px solid var(--glass-border);
+        color: var(--text-secondary);
+        padding: 2.5rem 2rem;
+        text-align: center;
+        font-size: 0.9rem;
+        position: relative;
+        z-index: 2;
+        backdrop-filter: blur(var(--blur-medium));
+        box-shadow: inset 0 -8px 20px rgba(15, 20, 25, 0.05);
+      }
+
+      input,
+      textarea,
+      select,
+      .input {
+        background: var(--glass-light);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: var(--radius-lg);
+        color: var(--text-primary);
+        padding: 0.6rem 0.8rem;
+        box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.6),
+          0 1px 2px var(--shadow-soft);
+        outline: none;
+        transition: border-color 0.1s ease, box-shadow 0.1s ease;
+      }
+
+      input:focus,
+      textarea:focus,
+      select:focus,
+      .input:focus {
+        border-color: var(--accent-blue);
+        box-shadow: 0 0 0 3px var(--accent-blue-15),
+          inset 0 1px 2px rgba(255, 255, 255, 0.8);
+        animation: breathe-glow 1.6s ease-in-out infinite;
+      }
+
+      @keyframes breathe-glow {
+        0% {
+          box-shadow: 0 0 0 2px var(--accent-blue-15),
+            inset 0 1px 2px rgba(255, 255, 255, 0.8);
+        }
+        50% {
+          box-shadow: 0 0 0 3px var(--accent-blue-25),
+            inset 0 1px 2px rgba(255, 255, 255, 0.9);
+        }
+        100% {
+          box-shadow: 0 0 0 2px var(--accent-blue-15),
+            inset 0 1px 2px rgba(255, 255, 255, 0.8);
+        }
+      }
+
+      footer p {
+        margin: 0.5rem 0;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .hero h1 {
+          font-size: 2.2rem;
+        }
+
+        .logo {
+          font-size: 1.2rem;
+        }
+
+        .nav-links {
+          gap: 1rem;
+          font-size: 0.9rem;
+        }
+
+        .cta-buttons {
+          flex-direction: column;
+        }
+
+        .about-content {
+          grid-template-columns: 1fr;
+          transform: translateY(-8px);
+          display: none;
+        }
+
+        .cards {
+          grid-template-columns: 1fr;
+          gap: 1rem;
+        }
+
+        .section-title {
+          font-size: 1.6rem;
+        }
+
+        .card {
+          box-shadow: 0 4px 8px var(--shadow-soft),
+            inset 0 1px 2px rgba(255, 255, 255, 0.6);
+        }
+        .card:hover {
+          transform: perspective(500px) rotateX(0.5deg) translateY(-1px);
+          box-shadow: 0 6px 12px var(--shadow-soft);
+        }
+        .btn,
+        .social-link {
+          box-shadow: 0 1px 2px var(--shadow-soft);
+        }
+      }
+
+      @media (min-width: 1024px) {
+        .card:hover {
+          transform: perspective(500px) rotateX(1.5deg) translateY(-3px);
+          box-shadow: 0 10px 18px var(--shadow-strong);
+        }
+        .btn:hover,
+        .social-link:hover {
+          box-shadow: 0 6px 12px var(--shadow-strong);
+        }
+      }
+      /* Agenda specific */
+      .agenda-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.25rem;
+      }
+      .agenda-card {
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.04),
+          rgba(255, 255, 255, 0.02)
+        );
+        padding: 1.2rem 1.25rem;
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--glass-border);
+        box-shadow: 0 10px 28px rgba(15, 20, 25, 0.06);
+      }
+      .agenda-card h3 {
+        margin: 0 0 0.6rem 0;
+        font-size: 1.2rem;
+      }
+      .session-entry {
+        padding: 0.6rem 0;
+        border-bottom: 1px dashed rgba(255, 255, 255, 0.04);
+      }
+      .session-entry:last-child {
+        border-bottom: none;
+      }
+      .session-time {
+        color: var(--accent-blue);
+        font-weight: 700;
+      }
+      .session-title {
+        margin-top: 0.2rem;
+        color: var(--text-primary);
+        font-weight: 600;
+      }
+      .session-speaker {
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        margin-top: 0.2rem;
+      }
+      /* Floating light & flow effects */
+      .light-flow {
+        position: absolute;
+        inset: -25% -25% -25% -25%;
+        z-index: 0;
+        pointer-events: none;
+        background: radial-gradient(
+            400px 400px at 20% 20%,
+            rgba(74, 158, 255, 0.06),
+            transparent
+          ),
+          radial-gradient(
+            400px 400px at 80% 80%,
+            rgba(139, 92, 246, 0.045),
+            transparent
+          );
+        filter: blur(60px) saturate(1.1);
+        opacity: 0.9;
+        animation: floatBackground 22s linear infinite;
+        transform-origin: center;
+        will-change: transform, opacity;
+      }
+
+      @keyframes floatBackground {
+        0% {
+          transform: translate3d(-2%, -2%, 0) scale(1);
+        }
+        50% {
+          transform: translate3d(2%, 2%, 0) scale(1.05);
+        }
+        100% {
+          transform: translate3d(-2%, -2%, 0) scale(1);
+        }
+      }
+
+      /* Floating streak */
+      .streak {
+        position: absolute;
+        top: 10%;
+        left: -40%;
+        width: 160%;
+        height: 40%;
+        background: linear-gradient(
+          90deg,
+          rgba(255, 255, 255, 0.02) 0%,
+          rgba(255, 255, 255, 0.06) 50%,
+          rgba(255, 255, 255, 0.02) 100%
+        );
+        transform: rotate(-12deg) skewX(-8deg);
+        filter: blur(40px) saturate(1.2);
+        opacity: 0.6;
+        animation: streakMove 12s linear infinite;
+        pointer-events: none;
+        will-change: transform, opacity;
+      }
+
+      @keyframes streakMove {
+        0% {
+          transform: translateX(-45%) rotate(-12deg) skewX(-8deg);
+          opacity: 0.2;
+        }
+        50% {
+          transform: translateX(0%) rotate(-12deg) skewX(-8deg);
+          opacity: 0.9;
+        }
+        100% {
+          transform: translateX(45%) rotate(-12deg) skewX(-8deg);
+          opacity: 0.2;
+        }
+      }
+
+      /* Back to top */
+      .back-to-top {
+        position: fixed;
+        right: 20px;
+        bottom: 28px;
+        background: linear-gradient(
+          180deg,
+          var(--accent-blue),
+          var(--accent-blue-dark)
+        );
+        color: var(--primary-dark);
+        padding: 0.8rem 1rem;
+        border-radius: 999px;
+        box-shadow: var(--glass-elev);
+        display: none;
+        z-index: 2000;
+        cursor: pointer;
+        border: none;
+      }
+      .back-to-top:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--glass-elev-strong);
+      }
+
+      /* Removed .nav-toggle as hamburger menu is no longer used */
+
+      /* Reduced motion for accessibility */
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation: none !important;
+          transition: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <!-- Navigation -->
+      <nav aria-label="Primary Navigation">
+        <div class="nav-container">
+          <div class="logo">DevFest Hangzhou</div>
+          <!-- nav toggle removed (no hamburger) -->
+          <ul id="primary-nav" class="nav-links">
+            <li>
+              <a
+                href="#home"
+                class="nav-link active"
+                onclick="showSection('home', event)"
+                >首页</a
+              >
+            </li>
+            <li>
+              <a
+                href="#gdg"
+                class="nav-link"
+                onclick="showSection('gdg', event)"
+                >关于 GDG</a
+              >
+            </li>
+            <li>
+              <a
+                href="#devtools"
+                class="nav-link"
+                onclick="showSection('devtools', event)"
+                >DevTools MCP</a
+              >
+            </li>
+            <li>
+              <a
+                href="#agenda"
+                class="nav-link"
+                onclick="showSection('agenda', event)"
+                >议程</a
+              >
+            </li>
+            <li>
+              <a
+                href="#about"
+                class="nav-link"
+                onclick="showSection('about', event)"
+                >关于我</a
+              >
+            </li>
+          </ul>
+          <!-- Performance toggle removed (no perf button) -->
+        </div>
+      </nav>
+
+      <!-- Home Section -->
+      <section id="home">
         <div class="hero">
-            <h1>DevFest Hangzhou 2025</h1>
-            <div class="subtitle">Chrome DevTools MCP Server Workshop</div>
-            <div class="date-location">2025年11月1日 · 杭州</div>
-            <div class="cta-buttons">
-                <a href="#devtools" class="btn btn-primary" onclick="showSection('devtools')">了解 Workshop</a>
-                <a href="#about" class="btn btn-secondary" onclick="showSection('about')">关于我</a>
-            </div>
+          <div class="light-flow" aria-hidden="true"></div>
+          <div class="streak" aria-hidden="true"></div>
+          <h1>DevFest Hangzhou 2025</h1>
+          <div class="subtitle">Chrome DevTools MCP Server Workshop</div>
+          <div class="date-location">2025年11月1日 · 杭州</div>
+          <div class="cta-buttons">
+            <a
+              href="#devtools"
+              class="btn btn-primary"
+              onclick="showSection('devtools', event)"
+              >了解 Workshop</a
+            >
+            <a
+              href="#about"
+              class="btn btn-secondary"
+              onclick="showSection('about', event)"
+              >关于我</a
+            >
+          </div>
         </div>
 
         <section>
-            <h2 class="section-title">Workshop 核心内容</h2>
-            <div class="cards">
-                <div class="card">
-                    <div class="card-icon">🔧</div>
-                    <h3>Chrome DevTools</h3>
-                    <p>掌握现代浏览器开发工具的强大功能，提升调试效率和开发能力。</p>
-                </div>
-                <div class="card">
-                    <div class="card-icon">🤖</div>
-                    <h3>MCP Server</h3>
-                    <p>了解 Model Context Protocol，学习构建智能开发工具的原理。</p>
-                </div>
-                <div class="card">
-                    <div class="card-icon">💡</div>
-                    <h3>实战应用</h3>
-                    <p>通过实际案例演示 DevTools MCP 在开发中的应用场景。</p>
-                </div>
+          <h2 class="section-title">Workshop 核心内容</h2>
+          <div class="cards">
+            <div class="card">
+              <div class="card-icon">🔧</div>
+              <h3>Chrome DevTools</h3>
+              <p>掌握现代浏览器开发工具的强大功能，提升调试效率和开发能力。</p>
             </div>
+            <div class="card">
+              <div class="card-icon">🤖</div>
+              <h3>MCP Server</h3>
+              <p>了解 Model Context Protocol，学习构建智能开发工具的原理。</p>
+            </div>
+            <div class="card">
+              <div class="card-icon">💡</div>
+              <h3>实战应用</h3>
+              <p>通过实际案例演示 DevTools MCP 在开发中的应用场景。</p>
+            </div>
+          </div>
         </section>
-    </section>
+      </section>
 
-    <!-- GDG Section -->
-    <section id="gdg" class="hidden">
+      <!-- GDG Section -->
+      <section id="gdg" class="hidden">
         <h2 class="section-title">关于 GDG 和 DevFest</h2>
-        
+
         <div class="about-content">
-            <div class="about-text">
-                <h3>什么是 GDG？</h3>
-                <p>Google Developer Groups (GDG) 是由 Google 支持的全球开发者社区。我们汇聚了对 Google 技术充满热情的开发者，通过定期举办技术分享、研讨会和社交活动，促进知识交流和技术成长。</p>
-                <p>GDG 社区覆盖全球数百个城市，为开发者提供了一个学习、分享和建立联系的平台。无论你是初学者还是资深开发者，都能找到属于自己的位置。</p>
-            </div>
-            <div class="about-image">🌏</div>
+          <div class="about-text">
+            <h3>什么是 GDG？</h3>
+            <p>
+              Google Developer Groups (GDG) 是由 Google
+              支持的全球开发者社区。我们汇聚了对 Google
+              技术充满热情的开发者，通过定期举办技术分享、研讨会和社交活动，促进知识交流和技术成长。
+            </p>
+            <p>
+              GDG
+              社区覆盖全球数百个城市，为开发者提供了一个学习、分享和建立联系的平台。无论你是初学者还是资深开发者，都能找到属于自己的位置。
+            </p>
+          </div>
+          <div class="about-image">🌏</div>
         </div>
 
-        <div class="about-content" style="margin-top: 2rem;">
-            <div class="about-image">🎊</div>
-            <div class="about-text">
-                <h3>什么是 DevFest？</h3>
-                <p>DevFest 是 GDG 社区一年一度的旗舰技术活动，在全球各地同步举办。这是一个为期一天或多天的开发者盛会，汇聚了行业专家、技术爱好者和创新者。</p>
-                <p>DevFest 涵盖 Android、Web、Cloud、AI/ML 等多个技术领域。DevFest Hangzhou 2025 聚焦于 Chrome DevTools 和 MCP Server，旨在帮助开发者提升调试技能和开发效率。</p>
-            </div>
+        <div class="about-content" style="margin-top: 2rem">
+          <div class="about-image">🎊</div>
+          <div class="about-text">
+            <h3>什么是 DevFest？</h3>
+            <p>
+              DevFest 是 GDG
+              社区一年一度的旗舰技术活动，在全球各地同步举办。这是一个为期一天或多天的开发者盛会，汇聚了行业专家、技术爱好者和创新者。
+            </p>
+            <p>
+              DevFest 涵盖 Android、Web、Cloud、AI/ML 等多个技术领域。DevFest
+              Hangzhou 2025 聚焦于 Chrome DevTools 和 MCP
+              Server，旨在帮助开发者提升调试技能和开发效率。
+            </p>
+          </div>
         </div>
-    </section>
+      </section>
 
-    <!-- DevTools MCP Section -->
-    <section id="devtools" class="hidden">
+      <!-- Agenda Section -->
+      <section id="agenda" class="hidden">
+        <h2 class="section-title">Agenda</h2>
+        <div class="agenda-grid">
+          <div class="agenda-card">
+            <h3>主会场</h3>
+            <div class="session-entry">
+              <div class="session-time">10:00-10:20</div>
+              <div class="session-title">加入谷歌开发者社区，我们一同成长</div>
+              <div class="session-speaker">
+                上官林杰（谷歌开发者生态大中华区负责人）
+              </div>
+            </div>
+            <div class="session-entry">
+              <div class="session-time">10:20-10:40</div>
+              <div class="session-title">Google Cloud AI Updates</div>
+              <div class="session-speaker">史洁（谷歌云架构工程师）</div>
+            </div>
+            <div class="session-entry">
+              <div class="session-time">10:40-11:00</div>
+              <div class="session-title">谷歌 AI 全家桶详细拆解</div>
+              <div class="session-speaker">曹江岚（Google AI GDE）</div>
+            </div>
+            <div class="session-entry">
+              <div class="session-time">11:00-11:20</div>
+              <div class="session-title">
+                Chrome DevTools 智能版，更聪明的调试伴侣
+              </div>
+              <div class="session-speaker">钱俊颖（Google Web GDE）</div>
+            </div>
+            <div class="session-entry">
+              <div class="session-time">11:20-11:40</div>
+              <div class="session-title">用 Gemini CLI 写代码</div>
+              <div class="session-speaker">
+                魏巍（Google Developer Advocate）
+              </div>
+            </div>
+            <div class="session-entry">
+              <div class="session-time">11:40-12:00</div>
+              <div class="session-title">
+                利用 Cloud Run 和 ADK 加速 AI 开发
+              </div>
+              <div class="session-speaker">江骏（Google AI GDE）</div>
+            </div>
+            <div class="session-entry">
+              <div class="session-time">13:30-13:50</div>
+              <div class="session-title">谷歌云赠金领取</div>
+              <div class="session-speaker">王玉成（Google AI GDE）</div>
+            </div>
+            <div class="session-entry">
+              <div class="session-time">13:50-14:30</div>
+              <div class="session-title">Nano Banana 模型介绍及实践演示</div>
+              <div class="session-speaker">王玉成（Google AI GDE）</div>
+            </div>
+            <div class="session-entry">
+              <div class="session-time">14:40-17:00</div>
+              <div class="session-title">Nano Banana 进阶黑客松 & 新手实践</div>
+              <div class="session-speaker">GDG Hangzhou</div>
+            </div>
+          </div>
+          <div class="agenda-card">
+            <h3>Web AI 分会场</h3>
+            <div class="session-entry">
+              <div class="session-time">13:30-13:50</div>
+              <div class="session-title">谷歌云赠金领取</div>
+              <div class="session-speaker">钱俊颖（Google Web GDE）</div>
+            </div>
+            <div class="session-entry">
+              <div class="session-time">13:50-14:15</div>
+              <div class="session-title">Chrome DevTools MCP Introduction</div>
+              <div class="session-speaker">钱俊颖（Google Web GDE）</div>
+            </div>
+            <div class="session-entry">
+              <div class="session-time">14:25-15:05</div>
+              <div class="session-title">
+                自动化神经新秀: Chrome DevTools MCP Server 上手实践
+              </div>
+              <div class="session-speaker">钱俊颖（Web GDE）</div>
+            </div>
+            <div class="session-entry">
+              <div class="session-time">15:15-15:40</div>
+              <div class="session-title">WebAI: 使用小语言模型构建 Web App</div>
+              <div class="session-speaker">李青（GDG 杭州社区特邀嘉宾）</div>
+            </div>
+            <div class="session-entry">
+              <div class="session-time">15:50-17:30</div>
+              <div class="session-title">
+                微调 Gemma 3 270M 并应用于 Web App
+              </div>
+              <div class="session-speaker">李青（GDG 杭州社区特邀嘉宾）</div>
+            </div>
+          </div>
+          <div class="agenda-card">
+            <h3>谷歌云出海 分会场</h3>
+            <div class="session-entry">
+              <div class="session-time">13:30-14:00</div>
+              <div class="session-title">
+                Google Cloud: 赋能 AI 从模型走向行动
+              </div>
+              <div class="session-speaker">
+                张璐（Google Cloud AI GTM 专家）
+              </div>
+            </div>
+            <div class="session-entry">
+              <div class="session-time">14:10-14:40</div>
+              <div class="session-title">
+                Google Cloud 上的智能体技术实战: ADK, A2A 与 MCP
+              </div>
+              <div class="session-speaker">
+                周彦君（Google Cloud 客户解决方案架构师）
+              </div>
+            </div>
+            <div class="session-entry">
+              <div class="session-time">14:40-15:10</div>
+              <div class="session-title">
+                基于 Gemini 2.5 Live 和 Computer Use 构建跨场景交互的超强 Agent
+              </div>
+              <div class="session-speaker">姚佳晨（Google Cloud AI 专家）</div>
+            </div>
+            <div class="session-entry">
+              <div class="session-time">15:10-15:30</div>
+              <div class="session-title">茶歇</div>
+            </div>
+            <div class="session-entry">
+              <div class="session-time">15:30-16:00</div>
+              <div class="session-title">
+                借助 Google Cloud 下一代 GenMedia 模型，开启出海新局
+              </div>
+              <div class="session-speaker">史洁（Google Cloud AI 专家）</div>
+            </div>
+            <div class="session-entry">
+              <div class="session-time">16:00-17:30</div>
+              <div class="session-title">出海主题圆桌论坛</div>
+              <div class="session-speaker">
+                子木（主持），赵维奇, Rokid, Lafe 等
+              </div>
+            </div>
+          </div>
+          <div class="agenda-card">
+            <h3>AI 市集</h3>
+            <div class="session-entry">
+              <div class="session-time">10:00-17:30</div>
+              <div class="session-title">
+                全天开放：学习区 / 体验区 / 创业区 / 就业区 等
+              </div>
+              <div class="session-speaker">
+                Datawhale, 特工宇宙, WaytoAGI 等现场活动及展位
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- DevTools MCP Section -->
+      <section id="devtools" class="hidden">
         <h2 class="section-title">Chrome DevTools MCP</h2>
-        
+
         <div class="about-content">
-            <div class="about-text">
-                <h3>Chrome DevTools</h3>
-                <p>Chrome DevTools 是内置在 Google Chrome 浏览器中的强大开发者工具。它提供了丰富的功能来帮助开发者实时编辑和调试 HTML、CSS 和 JavaScript。</p>
-                <p>通过 DevTools，你可以分析性能、监控网络请求、模拟移动设备、检测内存泄漏。掌握 DevTools 是每个前端开发者的必备技能。</p>
-            </div>
-            <div class="about-image">🔍</div>
+          <div class="about-text">
+            <h3>Chrome DevTools</h3>
+            <p>
+              Chrome DevTools 是内置在 Google Chrome
+              浏览器中的强大开发者工具。它提供了丰富的功能来帮助开发者实时编辑和调试
+              HTML、CSS 和 JavaScript。
+            </p>
+            <p>
+              通过
+              DevTools，你可以分析性能、监控网络请求、模拟移动设备、检测内存泄漏。掌握
+              DevTools 是每个前端开发者的必备技能。
+            </p>
+          </div>
+          <div class="about-image">🔍</div>
         </div>
 
-        <div class="about-content" style="margin-top: 2rem;">
-            <div class="about-image">🚀</div>
-            <div class="about-text">
-                <h3>MCP (Model Context Protocol)</h3>
-                <p>MCP 是一个开放协议，用于在 LLM 应用程序和外部数据源之间实现无缝集成。Chrome DevTools MCP Server 将 DevTools 的功能通过 MCP 协议暴露出来。</p>
-                <p>这使得 AI 助手可以直接操作浏览器，自动化测试和调试流程，提升开发效率和准确性。这代表了 AI 辅助开发的未来方向。</p>
-            </div>
+        <div class="about-content" style="margin-top: 2rem">
+          <div class="about-image">🚀</div>
+          <div class="about-text">
+            <h3>MCP (Model Context Protocol)</h3>
+            <p>
+              MCP 是一个开放协议，用于在 LLM
+              应用程序和外部数据源之间实现无缝集成。Chrome DevTools MCP Server
+              将 DevTools 的功能通过 MCP 协议暴露出来。
+            </p>
+            <p>
+              这使得 AI
+              助手可以直接操作浏览器，自动化测试和调试流程，提升开发效率和准确性。这代表了
+              AI 辅助开发的未来方向。
+            </p>
+          </div>
         </div>
 
-        <section style="padding-top: 2rem;">
-            <h2 class="section-title" style="margin-bottom: 1.5rem;">Workshop 议程</h2>
-            <div class="cards">
-                <div class="card">
-                    <div class="card-icon">📚</div>
-                    <h3>理论讲解</h3>
-                    <p>深入了解 Chrome DevTools 的核心功能和 MCP 协议的工作原理。</p>
-                </div>
-                <div class="card">
-                    <div class="card-icon">⚡</div>
-                    <h3>环境搭建</h3>
-                    <p>手把手教你搭建 DevTools MCP Server 开发环境，配置相关工具。</p>
-                </div>
-                <div class="card">
-                    <div class="card-icon">🎯</div>
-                    <h3>实战项目</h3>
-                    <p>通过实际案例演示如何使用 MCP 进行网页调试和性能优化。</p>
-                </div>
+        <section style="padding-top: 2rem">
+          <h2 class="section-title" style="margin-bottom: 1.5rem">
+            Workshop 议程
+          </h2>
+          <div class="cards">
+            <div class="card">
+              <div class="card-icon">📚</div>
+              <h3>理论讲解</h3>
+              <p>深入了解 Chrome DevTools 的核心功能和 MCP 协议的工作原理。</p>
             </div>
+            <div class="card">
+              <div class="card-icon">⚡</div>
+              <h3>环境搭建</h3>
+              <p>手把手教你搭建 DevTools MCP Server 开发环境，配置相关工具。</p>
+            </div>
+            <div class="card">
+              <div class="card-icon">🎯</div>
+              <h3>实战项目</h3>
+              <p>通过实际案例演示如何使用 MCP 进行网页调试和性能优化。</p>
+            </div>
+          </div>
         </section>
-    </section>
+      </section>
 
-    <!-- About Me Section -->
-    <section id="about" class="hidden">
+      <!-- About Me Section -->
+      <section id="about" class="hidden">
         <h2 class="section-title">关于我</h2>
         <div class="profile-card">
-            <div class="profile-avatar">👨‍💻</div>
-            <h2>Ryan</h2>
-            <div class="subtitle">浙江工商大学 · 计算机科学与技术 · 大三</div>
-            
-            <div class="profile-info">
-                <p>你好！我是 Ryan，一名热爱技术的计算机科学专业学生。目前就读于浙江工商大学，正处于大三阶段。</p>
-                
-                <p>我对 Web 开发、人工智能和开发者工具有着浓厚的兴趣。参加这次 DevFest Hangzhou 的 Chrome DevTools MCP Workshop，让我深入了解了现代浏览器开发工具的强大功能，也认识到 AI 与传统开发工具结合的巨大潜力。</p>
-                
-                <p>通过这个网站，我记录了本次 Workshop 的学习收获和心得体会。希望能与更多开发者交流学习，共同成长。</p>
-                
-                <p style="margin-top: 1.5rem;">
-                    <a href="https://github.com/Ryan041001" target="_blank" class="social-link">
-                        GitHub: Ryan041001
-                    </a>
-                </p>
-            </div>
-        </div>
-    </section>
+          <div class="profile-avatar">👨‍💻</div>
+          <h2>Ryan</h2>
+          <div class="subtitle">浙江工商大学 · 计算机科学与技术 · 大三</div>
 
-    <!-- Footer -->
-    <footer>
+          <div class="profile-info">
+            <p>
+              你好！我是
+              Ryan，一名热爱技术的计算机科学专业学生。目前就读于浙江工商大学，正处于大三阶段。
+            </p>
+
+            <p>
+              我对 Web 开发、人工智能和开发者工具有着浓厚的兴趣。参加这次
+              DevFest Hangzhou 的 Chrome DevTools MCP
+              Workshop，让我深入了解了现代浏览器开发工具的强大功能，也认识到 AI
+              与传统开发工具结合的巨大潜力。
+            </p>
+
+            <p>
+              通过这个网站，我记录了本次 Workshop
+              的学习收获和心得体会。希望能与更多开发者交流学习，共同成长。
+            </p>
+
+            <p style="margin-top: 1.5rem">
+              <a
+                href="https://github.com/Ryan041001"
+                target="_blank"
+                class="social-link"
+              >
+                GitHub: Ryan041001
+              </a>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer>
         <p>© 2025 DevFest Hangzhou - Chrome DevTools MCP Workshop</p>
         <p>Made with ❤️ by Ryan</p>
-    </footer>
-
+      </footer>
     </main>
+    <button class="back-to-top" aria-hidden="true">⬆</button>
 
     <script>
-        function showSection(sectionId) {
-            // Hide all sections
-            document.querySelectorAll('section').forEach(section => {
-                section.classList.add('hidden');
-            });
-            
-            // Show selected section
-            document.getElementById(sectionId).classList.remove('hidden');
-            
-            // Update active nav link
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.classList.remove('active');
-            });
-            event.target.classList.add('active');
-            
-            // Scroll to top
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-        
-        // Handle initial load
-        window.addEventListener('load', () => {
-            const hash = window.location.hash.slice(1) || 'home';
-            showSection(hash);
+      function showSection(sectionId, evt) {
+        // Hide only top-level sections (direct children of main with an id)
+        document.querySelectorAll("main > section[id]").forEach((section) => {
+          section.classList.add("hidden");
         });
+
+        // Show selected section
+        const target = document.getElementById(sectionId);
+        if (target) target.classList.remove("hidden");
+
+        // Update active nav link
+        document.querySelectorAll(".nav-link").forEach((link) => {
+          link.classList.remove("active");
+          link.removeAttribute("aria-current");
+        });
+        // Prefer the actual clicked anchor when available
+        const anchor =
+          evt?.target?.closest?.("a") ??
+          document.querySelector('.nav-link[href="#' + sectionId + '"]');
+        if (anchor) {
+          anchor.classList.add("active");
+          anchor.setAttribute("aria-current", "page");
+        }
+
+        // Scroll to top with respect to reduced-motion
+        const preferReduced = window.matchMedia(
+          "(prefers-reduced-motion: reduce)"
+        ).matches;
+        if (preferReduced) window.scrollTo({ top: 0 });
+        else window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      // Handle initial load & hash change
+      function initialShow() {
+        const hash = window.location.hash.slice(1) || "home";
+        showSection(hash);
+      }
+      window.addEventListener("load", initialShow);
+      window.addEventListener("hashchange", initialShow);
+
+      // Performance toggle removed from UI; function removed
+
+      // DOMContentLoaded: init lazy behaviors
+      document.addEventListener("DOMContentLoaded", () => {
+        const navLinks = document.querySelector(".nav-links");
+
+        // Auto-detect lower capability devices and enable low-performance mode
+        try {
+          const deviceMemory = navigator.deviceMemory || null;
+          const hwConcurrency = navigator.hardwareConcurrency || null;
+          const smallScreen = window.matchMedia("(max-width: 480px)").matches;
+          const lowPerf =
+            (deviceMemory !== null && deviceMemory <= 2) ||
+            (hwConcurrency !== null && hwConcurrency <= 2) ||
+            smallScreen;
+          if (lowPerf) {
+            document.documentElement.setAttribute("data-performance", "low");
+          }
+        } catch (e) {
+          /* ignore detection errors */
+        }
+        // No mobile nav toggle; no resize handler necessary
+
+        // Setup IntersectionObserver to highlight nav links based on the visible section
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                const id = entry.target.getAttribute("id");
+                if (!id) return;
+                document.querySelectorAll(".nav-link").forEach((l) => {
+                  l.classList.remove("active");
+                  l.removeAttribute("aria-current");
+                });
+                const link = document.querySelector(
+                  '.nav-link[href="#' + id + '"]'
+                );
+                if (link) {
+                  link.classList.add("active");
+                  link.setAttribute("aria-current", "page");
+                }
+              }
+            });
+          },
+          { threshold: 0.45 }
+        );
+        // Observe top-level sections
+        document
+          .querySelectorAll("main > section[id]")
+          .forEach((s) => observer.observe(s));
+
+        // Back to top logic
+        const backBtn = document.querySelector(".back-to-top");
+        if (backBtn) {
+          window.addEventListener("scroll", () => {
+            backBtn.style.display = window.scrollY > 500 ? "block" : "none";
+          });
+          backBtn.addEventListener("click", () =>
+            window.scrollTo({ top: 0, behavior: "smooth" })
+          );
+        }
+        // No mobile nav toggle; links don't close a hidden menu
+
+        // Keyboard accessibility on nav links
+        document.querySelectorAll(".nav-link").forEach((link) => {
+          link.addEventListener("keydown", (e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              link.click();
+            }
+          });
+        });
+      });
     </script>
-</body>
+  </body>
 </html>
