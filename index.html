@@ -72,7 +72,7 @@
       body {
         font-family: "Google Sans", "Roboto", sans-serif;
         color: var(--text-primary);
-        background-color: #f3f4f6;
+        background-color: #d8e2ed; /* 增加背景对比度，让毛玻璃效果更明显 */
         min-height: 100vh;
         overflow-x: hidden;
         position: relative;
@@ -267,6 +267,71 @@
 
       .nav-links a.active::after {
         display: none;
+      }
+
+      /* Mobile Navigation Toggle */
+      .nav-toggle {
+        display: none;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 6px; /* 增加间距 */
+        background: rgba(255, 255, 255, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        cursor: pointer;
+        width: 48px; /* 稍微加大 */
+        height: 48px;
+        border-radius: 50%;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        padding: 0;
+        z-index: 1001;
+      }
+
+      .nav-toggle:hover {
+        background: rgba(255, 255, 255, 0.8);
+        transform: scale(1.05);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .nav-toggle:active {
+        transform: scale(0.95);
+      }
+
+      .hamburger {
+        width: 24px; /* 加宽 */
+        height: 3px; /* 加粗，确保视觉一致 */
+        background: var(--text-primary);
+        border-radius: 3px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        transform-origin: center;
+      }
+
+      /* Animation states */
+      .nav-toggle[aria-expanded="true"] {
+        background: var(--accent-blue);
+        border-color: var(--accent-blue);
+        box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+        gap: 0; /* 展开时取消间距，方便定位 */
+      }
+
+      .nav-toggle[aria-expanded="true"] .hamburger {
+        background: white;
+        position: absolute; /* 绝对定位以确保交叉完美 */
+      }
+
+      .nav-toggle[aria-expanded="true"] .hamburger:nth-child(1) {
+        transform: rotate(45deg);
+      }
+
+      .nav-toggle[aria-expanded="true"] .hamburger:nth-child(2) {
+        opacity: 0;
+        transform: translateX(10px);
+      }
+
+      .nav-toggle[aria-expanded="true"] .hamburger:nth-child(3) {
+        transform: rotate(-45deg);
       }
 
       /* Content wrapper */
@@ -698,7 +763,7 @@
       }
 
       /* Responsive */
-      @media (max-width: 768px) {
+      @media (max-width: 1024px) {
         .hero h1 {
           font-size: 2.5rem;
         }
@@ -707,8 +772,98 @@
           font-size: 1.2rem;
         }
 
+        /* Show mobile menu toggle */
+        .nav-toggle {
+          display: flex;
+        }
+
+        /* Hide desktop nav links by default */
         .nav-links {
-          display: none; /* Simplified for mobile for now */
+          display: flex;
+          position: absolute;
+          top: 100%;
+          left: 1rem;
+          right: 1rem;
+          background: rgba(255, 255, 255, 0.85); /* 降低透明度，增强毛玻璃感 */
+          backdrop-filter: blur(24px); /* 增强模糊 */
+          -webkit-backdrop-filter: blur(24px);
+          flex-direction: column;
+          padding: 1.5rem;
+          border-radius: 24px;
+          box-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.15),
+            0 10px 10px -5px rgba(0, 0, 0, 0.04),
+            inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+          margin-top: 1rem;
+          transform-origin: top center;
+          transform: scaleY(0.9) translateY(-20px);
+          opacity: 0;
+          visibility: hidden;
+          transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+          border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+
+        /* Show nav links when toggle is active */
+        .nav-links.nav-open {
+          transform: scaleY(1) translateY(0);
+          opacity: 1;
+          visibility: visible;
+        }
+
+        .nav-links li {
+          width: 100%;
+          opacity: 0;
+          transform: translateY(10px);
+          transition: all 0.3s ease;
+        }
+
+        .nav-links.nav-open li {
+          opacity: 1;
+          transform: translateY(0);
+        }
+
+        /* Staggered animation for menu items */
+        .nav-links.nav-open li:nth-child(1) {
+          transition-delay: 0.1s;
+        }
+        .nav-links.nav-open li:nth-child(2) {
+          transition-delay: 0.15s;
+        }
+        .nav-links.nav-open li:nth-child(3) {
+          transition-delay: 0.2s;
+        }
+        .nav-links.nav-open li:nth-child(4) {
+          transition-delay: 0.25s;
+        }
+        .nav-links.nav-open li:nth-child(5) {
+          transition-delay: 0.3s;
+        }
+
+        .nav-links a {
+          display: block;
+          padding: 1rem;
+          border-radius: 16px;
+          text-align: center;
+          font-size: 1.1rem;
+          font-weight: 600;
+          color: var(--text-primary);
+          background: transparent;
+          border: 1px solid transparent;
+          margin-bottom: 0.5rem;
+        }
+
+        .nav-links a:hover {
+          background: rgba(255, 255, 255, 0.6);
+          transform: scale(1.02);
+        }
+
+        .nav-links a.active {
+          background: linear-gradient(
+            135deg,
+            var(--accent-blue),
+            var(--accent-cyan)
+          );
+          color: white;
+          box-shadow: 0 8px 16px -4px rgba(59, 130, 246, 0.4);
         }
 
         .cta-buttons {
@@ -859,7 +1014,16 @@
       <nav aria-label="Primary Navigation">
         <div class="nav-container">
           <div class="logo">DevFest Hangzhou</div>
-          <!-- nav toggle removed (no hamburger) -->
+          <!-- Mobile nav toggle -->
+          <button
+            class="nav-toggle"
+            aria-label="Toggle navigation menu"
+            aria-expanded="false"
+          >
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+            <span class="hamburger"></span>
+          </button>
           <ul id="primary-nav" class="nav-links">
             <li>
               <a
@@ -902,7 +1066,6 @@
               >
             </li>
           </ul>
-          <!-- Performance toggle removed (no perf button) -->
         </div>
       </nav>
 
@@ -978,7 +1141,7 @@
               的一份子，由杭州当地来自不同公司、不同专业背景的工程师、产品、运营、市场等角色的社区爱好者建立。
             </p>
             <p>
-              我们本着“连接、学习、成长”的价值观，搭建杭州本地的技术和信息共享平台。目前社区拥有近千名成员，涵盖各行各业的工程师、学生、技术专家和创业者。我们每年举办多场线下技术沙龙和聚会，提供丰富的礼品及展示自我的平台，欢迎广大技术爱好者加入我们！
+              我们本着"连接、学习、成长"的价值观，搭建杭州本地的技术和信息共享平台。目前社区拥有近千名成员，涵盖各行各业的工程师、学生、技术专家和创业者。我们每年举办多场线下技术沙龙和聚会，提供丰富的礼品及展示自我的平台，欢迎广大技术爱好者加入我们！
             </p>
           </div>
         </div>
@@ -1295,6 +1458,14 @@
           anchor.setAttribute("aria-current", "page");
         }
 
+        // Close mobile menu after navigation
+        const navToggle = document.querySelector(".nav-toggle");
+        const navLinks = document.querySelector(".nav-links");
+        if (navToggle && navLinks.classList.contains("nav-open")) {
+          navLinks.classList.remove("nav-open");
+          navToggle.setAttribute("aria-expanded", "false");
+        }
+
         // Scroll to top with respect to reduced-motion
         const preferReduced = window.matchMedia(
           "(prefers-reduced-motion: reduce)"
@@ -1311,11 +1482,42 @@
       window.addEventListener("load", initialShow);
       window.addEventListener("hashchange", initialShow);
 
-      // Performance toggle removed from UI; function removed
-
       // DOMContentLoaded: init lazy behaviors
       document.addEventListener("DOMContentLoaded", () => {
+        // Mobile navigation toggle
+        const navToggle = document.querySelector(".nav-toggle");
         const navLinks = document.querySelector(".nav-links");
+
+        if (navToggle && navLinks) {
+          navToggle.addEventListener("click", () => {
+            const isExpanded =
+              navToggle.getAttribute("aria-expanded") === "true";
+
+            if (isExpanded) {
+              navLinks.classList.remove("nav-open");
+              navToggle.setAttribute("aria-expanded", "false");
+            } else {
+              navLinks.classList.add("nav-open");
+              navToggle.setAttribute("aria-expanded", "true");
+            }
+          });
+
+          // Close menu when clicking outside
+          document.addEventListener("click", (e) => {
+            if (!navToggle.contains(e.target) && !navLinks.contains(e.target)) {
+              navLinks.classList.remove("nav-open");
+              navToggle.setAttribute("aria-expanded", "false");
+            }
+          });
+
+          // Close menu on escape key
+          document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape" && navLinks.classList.contains("nav-open")) {
+              navLinks.classList.remove("nav-open");
+              navToggle.setAttribute("aria-expanded", "false");
+            }
+          });
+        }
 
         // Auto-detect lower capability devices and enable low-performance mode
         try {
@@ -1332,7 +1534,6 @@
         } catch (e) {
           /* ignore detection errors */
         }
-        // No mobile nav toggle; no resize handler necessary
 
         // Setup IntersectionObserver to highlight nav links based on the visible section
         const observer = new IntersectionObserver(
@@ -1372,7 +1573,6 @@
             window.scrollTo({ top: 0, behavior: "smooth" })
           );
         }
-        // No mobile nav toggle; links don't close a hidden menu
 
         // Keyboard accessibility on nav links
         document.querySelectorAll(".nav-link").forEach((link) => {
